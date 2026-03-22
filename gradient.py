@@ -31,7 +31,7 @@ class Gradient:
         # noise amount
         self.set_uniform(
             "noiseAmount",
-            config["noise_amount"],
+            config["bg_noise_amount"],
             "float*",
             pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT
         )

@@ -5,7 +5,11 @@ description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
     "cffi==2.0.0",
+    "dbus-next==0.2.3",
+    "materialyoucolor==3.0.2",
     "numpy==2.4.3",
+    "pillow==12.1.1",
+    "platformdirs==4.9.4",
     "pyaudio==0.2.14",
     "raylib==5.5.0.4",
     "sounddevice==0.5.5",
