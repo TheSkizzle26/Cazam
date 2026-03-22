@@ -1,5 +1,5 @@
 """
-Wrapper around cavacore
+Simple wrapper around cava
 """
 
 
