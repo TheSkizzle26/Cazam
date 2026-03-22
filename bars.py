@@ -32,5 +32,10 @@ class Bars:
                 ),
                 self.config_bar_roundness,
                 8,
-                pr.WHITE
+                (
+                    255,
+                    255,
+                    255,
+                    255
+                )
             )

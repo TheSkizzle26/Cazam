@@ -25,6 +25,7 @@ class Config:
             "bar_height": {"type": ParamType.NUMBER, "value": 75, "comment": "in percent"},
             "bar_roundness": {"type": ParamType.NUMBER, "value": 80, "comment": "in percent"},
             "bg_noise_amount": {"type": ParamType.FLOAT, "value": 0.05},
+            "fg_noise_amount": {"type": ParamType.FLOAT, "value": 0.02},
         }
 
         if not os.path.exists(self.config_dir_path):

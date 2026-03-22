@@ -25,10 +25,12 @@ class Main:
         self.system = SystemLinux()
         self.core = Core(self.config, 144)
         self.palette = Palette()
-        self.gradient = Gradient(self.config, self.palette, (self.width, self.height))
+        self.gradient = Gradient(self.config, self.palette)
         self.bars = Bars(self.config, self.core)
 
-        self.gradient_texture = pr.load_render_texture(self.width, self.height)
+        self.gradient_texture_bg = pr.load_render_texture(self.width, self.height)
+        self.gradient_texture_fg = pr.load_render_texture(self.width, self.height)
+        self.bars_mask = pr.load_render_texture(self.width, self.height)
         self.calculate_palette()
 
         self.current_song_name = None
@@ -51,8 +53,12 @@ class Main:
         if image_data:
             self.palette.from_image_data(image_data)
 
-        pr.begin_texture_mode(self.gradient_texture)
-        self.gradient.render((self.width, self.height))
+        pr.begin_texture_mode(self.gradient_texture_bg)
+        self.gradient.render((self.width, self.height), is_foreground=False)
+        pr.end_texture_mode()
+
+        pr.begin_texture_mode(self.gradient_texture_fg)
+        self.gradient.render((self.width, self.height), is_foreground=True)
         pr.end_texture_mode()
 
     def sync(self):
@@ -84,17 +90,38 @@ class Main:
         self.core.fetch() # handles fps for some reason
 
     def render(self):
+        pr.begin_texture_mode(self.bars_mask)
+        pr.clear_background(pr.BLANK)
+
+        self.bars.render((self.width, self.height))
+
+        pr.end_texture_mode()
         pr.begin_drawing()
-        pr.clear_background(pr.BLACK)
 
         pr.draw_texture_rec(
-            self.gradient_texture.texture,
+            self.gradient_texture_bg.texture,
             (0, 0, self.width, -self.height),
             (0, 0),
             pr.WHITE
         )
 
-        self.bars.render((self.width, self.height))
+        pr.begin_texture_mode(self.bars_mask)
+        pr.begin_blend_mode(pr.BlendMode.BLEND_MULTIPLIED)
+        pr.draw_texture_rec(
+            self.gradient_texture_fg.texture,
+            (0, 0, self.width, -self.height),
+            (0, 0),
+            pr.WHITE
+        )
+        pr.end_blend_mode()
+        pr.end_texture_mode()
+
+        pr.draw_texture_rec(
+            self.bars_mask.texture,
+            (0, 0, self.width, -self.height),
+            (0, 0),
+            pr.WHITE
+        )
 
         pr.end_drawing()
 

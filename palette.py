@@ -8,9 +8,8 @@ from materialyoucolor.hct import Hct
 
 class Palette:
     def __init__(self):
-        self.colors = [(56, 30, 60), (107, 89, 108), (200, 138, 151)]
-        self.text_color_light = (255, 239, 252)
-        self.text_color_dark = (209, 173, 212)
+        self.colors = [(56, 30, 60), (107, 89, 108), (200, 138, 151),
+                       (56, 30, 60), (107, 89, 108), (200, 138, 151)]
 
     @staticmethod
     def argb_to_rgb(argb):
@@ -41,21 +40,17 @@ class Palette:
             0.0
         )
 
-        add = 0
-        mul = 8
-
-        tones = [2, 5, 8]
-        for i in range(len(tones)):
-            tones[i] = int(add + tones[i] * mul)
+        tones_bg = [16, 40, 64]
+        tones_fg = [64, 80, 96]
 
         self.colors = (
-            self.argb_to_rgb(scheme.primary_palette.tone(tones[0])),
-            self.argb_to_rgb(scheme.secondary_palette.tone(tones[1])),
-            self.argb_to_rgb(scheme.tertiary_palette.tone(tones[2])),
+            self.argb_to_rgb(scheme.primary_palette.tone(tones_bg[0])), # foreground
+            self.argb_to_rgb(scheme.secondary_palette.tone(tones_bg[1])),
+            self.argb_to_rgb(scheme.tertiary_palette.tone(tones_bg[2])),
+            self.argb_to_rgb(scheme.primary_palette.tone(tones_fg[0])), # background
+            self.argb_to_rgb(scheme.secondary_palette.tone(tones_fg[1])),
+            self.argb_to_rgb(scheme.tertiary_palette.tone(tones_fg[2])),
         )
-
-        self.text_color_light = self.argb_to_rgb(scheme.primary_palette.tone(96))
-        self.text_color_dark = self.argb_to_rgb(scheme.primary_palette.tone(75))
 
     def get_color(self, idx: int):
         if idx >= len(self.colors):
