@@ -20,9 +20,10 @@ class Config:
         self.config_path = self.config_dir_path + "/" + "cazam.conf"
 
         self.params = {
-            "num_bars": {"type": ParamType.NUMBER, "value": 64},
+            "num_bars": {"type": ParamType.NUMBER, "value": 80},
             "bar_spacing": {"type": ParamType.FLOAT, "value": 2},
-            "bar_height": {"type": ParamType.NUMBER, "value": 50, "comment": "in percent"},
+            "bar_height": {"type": ParamType.NUMBER, "value": 75, "comment": "in percent"},
+            "bar_roundness": {"type": ParamType.NUMBER, "value": 80, "comment": "in percent"},
             "bg_noise_amount": {"type": ParamType.FLOAT, "value": 0.05},
         }
 

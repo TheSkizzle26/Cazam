@@ -1,10 +1,12 @@
 import sys
+import platformdirs
 import pyray as pr
 import os
 
 from config import Config
 from system import SystemLinux
 from core import Core
+import cover
 from palette import Palette
 from gradient import Gradient
 from bars import Bars
@@ -21,13 +23,16 @@ class Main:
 
         self.config = Config()
         self.system = SystemLinux()
-        self.core = Core(144)
+        self.core = Core(self.config, 144)
         self.palette = Palette()
         self.gradient = Gradient(self.config, self.palette, (self.width, self.height))
         self.bars = Bars(self.config, self.core)
 
         self.gradient_texture = pr.load_render_texture(self.width, self.height)
         self.calculate_palette()
+
+        self.current_song_name = None
+        self.last_sync_time = -999
 
     def find_song_path(self, path: str, name: str):
         for sub_dir in os.listdir(path):
@@ -51,12 +56,30 @@ class Main:
         pr.end_texture_mode()
 
     def sync(self):
-        ...
+        self.system.fetch()
+        song_name = self.system.get_song_name()
+
+        if song_name != self.current_song_name:
+            self.current_song_name = song_name
+            song_path = self.system.get_song_path()
+
+            if not song_path:
+                # not provided by player
+                song_path = self.find_song_path(platformdirs.user_music_dir(), song_name)
+
+            image_data = cover.extract_file_cover(song_path)
+            self.calculate_palette(image_data)
 
     def update(self):
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
             pr.close_window()
             sys.exit()
+
+        now = pr.get_time()
+
+        if now - self.last_sync_time > 1:
+            self.last_sync_time = now
+            self.sync()
 
         self.core.fetch() # handles fps for some reason
 
