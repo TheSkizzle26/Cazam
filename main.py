@@ -17,7 +17,7 @@ class Main:
         self.config = Config()
         self.config_monitor = self.config["monitor"]
         self.config_use_vsync = bool(self.config["vsync"])
-        self.config_target_fps = bool(self.config["target_fps"])
+        self.config_target_fps = self.config["target_fps"]
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
         self.target_fps = -1 # set by init_window
 
