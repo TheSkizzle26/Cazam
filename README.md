@@ -1,6 +1,8 @@
 # Cazam
 A simple and modern frontend for [cava](https://github.com/karlstav/cava)
 
+![image](./preview.jpg)
+
 # Requirements
 - cava installed on your system
 - uv installed on your system
