@@ -17,12 +17,7 @@ class Main:
         self.width, self.height = 1920, 1080
         self.width_ffi = pr.ffi.new("int *", self.width)
         self.height_ffi = pr.ffi.new("int *", self.height)
-        pr.set_config_flags(
-            pr.ConfigFlags.FLAG_FULLSCREEN_MODE |
-            pr.ConfigFlags.FLAG_WINDOW_RESIZABLE
-        )
-        pr.init_window(self.width, self.height, "Cazam")
-        pr.set_window_monitor(0)
+        self.init_window()
 
         self.config = Config()
         self.system = SystemLinux()
@@ -34,12 +29,20 @@ class Main:
         self.gradient_texture_bg = pr.load_render_texture(self.width, self.height)
         self.gradient_texture_fg = pr.load_render_texture(self.width, self.height)
         self.bars_texture = pr.load_render_texture(self.width, self.height)
-        self.calculate_palette()
 
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
-
         self.current_song_name = None
         self.last_sync_time = -999
+
+        self.calculate_palette()
+
+    def init_window(self):
+        pr.set_config_flags(
+            pr.ConfigFlags.FLAG_FULLSCREEN_MODE |
+            pr.ConfigFlags.FLAG_WINDOW_RESIZABLE
+        )
+        pr.init_window(self.width, self.height, "Cazam")
+        pr.set_window_monitor(0)
 
     def regenerate_render_textures(self):
         if self.gradient_texture_bg: pr.unload_render_texture(self.gradient_texture_bg)
@@ -56,7 +59,7 @@ class Main:
 
             if os.path.isdir(full_path):
                 ret = self.find_song_path(full_path, name)
-                if len(ret): return ret
+                if ret: return ret
             elif sub_dir.endswith((".mp3", ".wav", ".ogg", ".flac")):
                 if sub_dir.startswith(name):
                     return full_path
@@ -93,11 +96,7 @@ class Main:
             image_data = cover.extract_file_cover(song_path)
             self.calculate_palette(image_data)
 
-    def update(self):
-        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
-            pr.close_window()
-            sys.exit()
-
+    def adapt_window_size(self):
         pr.glfw_get_window_size(pr.get_window_handle(), self.width_ffi, self.height_ffi)
         window_size = (
             self.width_ffi[0],
@@ -111,7 +110,14 @@ class Main:
             self.regenerate_render_textures()
             self.calculate_palette()
 
+    def update(self):
         now = pr.get_time()
+
+        if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
+            pr.close_window()
+            sys.exit()
+
+        self.adapt_window_size()
 
         if now - self.last_sync_time > 1:
             self.last_sync_time = now
@@ -119,21 +125,19 @@ class Main:
 
         self.core.fetch() # handles fps for some reason
 
-    def render(self):
-        pr.begin_texture_mode(self.bars_texture)
-        pr.clear_background(pr.BLANK)
-
-        self.bars.render((self.width, self.height))
-
-        pr.end_texture_mode()
-        pr.begin_drawing()
-
+    def draw_render_texture(self, render_texture: pr.RenderTexture):
         pr.draw_texture_rec(
-            self.gradient_texture_bg.texture,
+            render_texture.texture,
             (0, 0, self.width, -self.height),
             (0, 0),
             pr.WHITE
         )
+
+    def render_bars(self):
+        pr.begin_texture_mode(self.bars_texture)
+        pr.clear_background(pr.BLANK)
+        self.bars.render((self.width, self.height))
+        pr.end_texture_mode()
 
         pr.begin_texture_mode(self.bars_texture)
         pr.begin_blend_mode(pr.BlendMode.BLEND_MULTIPLIED)
@@ -146,12 +150,13 @@ class Main:
         pr.end_blend_mode()
         pr.end_texture_mode()
 
-        pr.draw_texture_rec(
-            self.bars_texture.texture,
-            (0, 0, self.width, -self.height),
-            (0, 0),
-            pr.WHITE
-        )
+        self.draw_render_texture(self.bars_texture)
+
+    def render(self):
+        pr.begin_drawing()
+
+        self.draw_render_texture(self.gradient_texture_bg)
+        self.render_bars()
 
         pr.end_drawing()
 
