@@ -34,7 +34,7 @@ class Palette:
         image = Image.open(BytesIO(data))
         pixels = list(image.getdata())
 
-        if type(pixels[0]) == int:
+        if type(pixels[0]) == int: # invalid data
             pixels = [(0, 0, 0)]
 
         result = QuantizeCelebi(pixels, 128)
@@ -60,8 +60,6 @@ class Palette:
             self.argb_to_rgb(scheme.tertiary_palette.tone(tones_fg[2])),
         )
 
-        print(self.colors)
-
     def get_color(self, idx: int):
         if idx >= len(self.colors):
             return 0, 0, 0
@@ -75,9 +73,3 @@ class Palette:
             color[1] / 255,
             color[2] / 255,
         )
-
-    def get_text_color_light(self):
-        return self.text_color_light
-
-    def get_text_color_dark(self):
-        return self.text_color_dark
