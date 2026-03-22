@@ -15,4 +15,11 @@ A simple and modern frontend for [cava](https://github.com/karlstav/cava)
 # How to configure
 - Take a look at the cazam.conf file in the config folder (~/.config/Cazam on Linux)
 - Edit it and rerun the program
-- to reset the config file, just delete it and rerun the program
+- To reset the config file, just delete it and rerun the program
+- Set use_local_cover_palette to 1 in order to extract the cover image from your local music 
+files and use that to generate the color palette
+
+# Images
+![image](./preview_0.jpg)
+![image](./preview_1.jpg)
+![image](./preview_2.jpg)
