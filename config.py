@@ -11,6 +11,10 @@ class ParamType(Enum):
     FLOAT = auto()
 
 class Config:
+    """
+    Bit convoluted but who cares
+    """
+
     def __init__(self):
         self.config_dir_path = platformdirs.user_config_dir(
             APP_NAME,
