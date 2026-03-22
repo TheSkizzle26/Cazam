@@ -102,7 +102,13 @@ class Main:
 
             if not song_path:
                 # not provided by player
+                print("Player doesn't provide song path, let's search for it...")
                 song_path = self.find_song_path(platformdirs.user_music_dir(), song_name)
+
+            if song_path:
+                print(f"Found song path. ({song_path})")
+            else:
+                print(f"Couldn't find song path ({song_name})")
 
             image_data = cover.extract_file_cover(song_path)
             self.calculate_palette(image_data)

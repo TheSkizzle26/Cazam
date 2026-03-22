@@ -31,7 +31,10 @@ bit_format = %s
         self.config_file.write(self.config)
         self.config_file.flush()
 
-        self.process = subprocess.Popen(["cava", "-p", self.config_file.name], stdout=subprocess.PIPE)
+        try:
+            self.process = subprocess.Popen(["cava", "-p", self.config_file.name], stdout=subprocess.PIPE)
+        except subprocess.SubprocessError:
+            raise BaseException("Cava not installed!")
         self.chunk_size = self.byte_size * self.num_bars
         self.format = self.byte_type * self.num_bars
         self.source = self.process.stdout # change for different raw_target
