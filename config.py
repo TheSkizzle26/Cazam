@@ -26,6 +26,13 @@ class Config:
             "bar_roundness": {"type": ParamType.NUMBER, "value": 80, "comment": "in percent"},
             "bg_noise_amount": {"type": ParamType.FLOAT, "value": 0.05},
             "fg_noise_amount": {"type": ParamType.FLOAT, "value": 0.02},
+            "use_local_cover_palette": {"type": ParamType.NUMBER, "value": 0, "comment": "set to 1 to use local music files for palette"},
+            "bg_color1": {"type": ParamType.NUMBER_3, "value": (0, 45, 46)},
+            "bg_color2": {"type": ParamType.NUMBER_3, "value": (74, 99, 99)},
+            "bg_color3": {"type": ParamType.NUMBER_3, "value": (120, 160, 188)},
+            "fg_color1": {"type": ParamType.NUMBER_3, "value": (112, 164, 165)},
+            "fg_color2": {"type": ParamType.NUMBER_3, "value": (176, 204, 204)},
+            "fg_color3": {"type": ParamType.NUMBER_3, "value": (234, 245, 255)},
         }
 
         if not os.path.exists(self.config_dir_path):

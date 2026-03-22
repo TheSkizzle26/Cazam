@@ -5,11 +5,19 @@ from materialyoucolor.score.score import Score
 from materialyoucolor.scheme.scheme_tonal_spot import SchemeTonalSpot
 from materialyoucolor.hct import Hct
 
+from config import Config
+
 
 class Palette:
-    def __init__(self):
-        self.colors = [(56, 30, 60), (107, 89, 108), (200, 138, 151),
-                       (56, 30, 60), (107, 89, 108), (200, 138, 151)]
+    def __init__(self, config: Config):
+        self.colors = [
+            config["bg_color1"],
+            config["bg_color2"],
+            config["bg_color3"],
+            config["fg_color1"],
+            config["fg_color2"],
+            config["fg_color3"],
+        ]
 
     @staticmethod
     def argb_to_rgb(argb):
@@ -51,6 +59,8 @@ class Palette:
             self.argb_to_rgb(scheme.secondary_palette.tone(tones_fg[1])),
             self.argb_to_rgb(scheme.tertiary_palette.tone(tones_fg[2])),
         )
+
+        print(self.colors)
 
     def get_color(self, idx: int):
         if idx >= len(self.colors):

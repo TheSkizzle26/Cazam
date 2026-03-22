@@ -15,3 +15,4 @@ A simple and modern frontend for [cava](https://github.com/karlstav/cava)
 # How to configure
 - Take a look at the cazam.conf file in the config folder (~/.config/Cazam on Linux)
 - Edit it and rerun the program
+- to reset the config file, just delete it and rerun the program
