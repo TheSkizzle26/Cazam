@@ -24,6 +24,9 @@ class Config:
         self.config_path = self.config_dir_path + "/" + "cazam.conf"
 
         self.params = {
+            "monitor": {"type": ParamType.NUMBER, "value": 0},
+            "vsync": {"type": ParamType.NUMBER, "value": 1}, # not actual vsync, but we don't need to tell 'em that :)
+            "target_fps": {"type": ParamType.NUMBER, "value": 60, "comment": "ignored when vsync is used"},
             "num_bars": {"type": ParamType.NUMBER, "value": 80},
             "bar_spacing": {"type": ParamType.FLOAT, "value": 2},
             "bar_height": {"type": ParamType.NUMBER, "value": 75, "comment": "in percent"},

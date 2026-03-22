@@ -14,14 +14,20 @@ from bars import Bars
 
 class Main:
     def __init__(self):
+        self.config = Config()
+        self.config_monitor = self.config["monitor"]
+        self.config_use_vsync = bool(self.config["vsync"])
+        self.config_target_fps = bool(self.config["target_fps"])
+        self.config_use_local_files = bool(self.config["use_local_cover_palette"])
+        self.target_fps = -1 # set by init_window
+
         self.width, self.height = 1920, 1080
         self.width_ffi = pr.ffi.new("int *", self.width)
         self.height_ffi = pr.ffi.new("int *", self.height)
         self.init_window()
 
-        self.config = Config()
         self.system = SystemLinux()
-        self.core = Core(self.config, 144)
+        self.core = Core(self.config, self.target_fps)
         self.palette = Palette(self.config)
         self.gradient = Gradient(self.config, self.palette)
         self.bars = Bars(self.config, self.core)
@@ -30,19 +36,23 @@ class Main:
         self.gradient_texture_fg = pr.load_render_texture(self.width, self.height)
         self.bars_texture = pr.load_render_texture(self.width, self.height)
 
-        self.config_use_local_files = bool(self.config["use_local_cover_palette"])
         self.current_song_name = None
         self.last_sync_time = -999
 
         self.calculate_palette()
 
     def init_window(self):
+        if self.config_use_vsync:
+            self.target_fps = pr.get_monitor_refresh_rate(self.config_monitor)
+        else:
+            self.target_fps = self.config_target_fps
+
         pr.set_config_flags(
             pr.ConfigFlags.FLAG_FULLSCREEN_MODE |
             pr.ConfigFlags.FLAG_WINDOW_RESIZABLE
         )
         pr.init_window(self.width, self.height, "Cazam")
-        pr.set_window_monitor(0)
+        pr.set_window_monitor(self.config_monitor)
 
     def regenerate_render_textures(self):
         if self.gradient_texture_bg: pr.unload_render_texture(self.gradient_texture_bg)
