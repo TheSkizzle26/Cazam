@@ -49,6 +49,8 @@ class Config:
             "use_local_cover_palette": {"type": ParamType.NUMBER, "value": 0, "comment": "set to 1 to use local music files for palette"},
             "music_file_path": {"type": ParamType.STRING, "value": "", "comment": "leave empty to use default Music directory"},
 
+            "empty4": {"type": ParamType.EMPTY},
+
             "bg_color1": {"type": ParamType.NUMBER_3, "value": (0, 45, 46)},
             "bg_color2": {"type": ParamType.NUMBER_3, "value": (74, 99, 99)},
             "bg_color3": {"type": ParamType.NUMBER_3, "value": (120, 160, 188)},
