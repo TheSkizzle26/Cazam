@@ -19,7 +19,7 @@ class Main:
 
         self.config = Config()
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
-        self.config_music_file_path = self.config["music_file_path"]
+        self.config_music_file_path = self.config["music_file_path"].removesuffix("/").removesuffix("\\")
 
         self.width, self.height = 1920, 1080
         self.width_ffi = pr.ffi.new("int *", self.width)
