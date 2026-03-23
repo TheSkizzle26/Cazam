@@ -9,6 +9,7 @@ class ParamType(Enum):
     EMPTY = auto()
     NUMBER = auto()
     NUMBER_3 = auto()
+    STRING = auto()
     FLOAT = auto()
 
 class Config:
@@ -46,6 +47,8 @@ class Config:
             "empty3": {"type": ParamType.EMPTY},
 
             "use_local_cover_palette": {"type": ParamType.NUMBER, "value": 0, "comment": "set to 1 to use local music files for palette"},
+            "music_file_path": {"type": ParamType.STRING, "value": "", "comment": "leave empty to use default Music directory"},
+
             "bg_color1": {"type": ParamType.NUMBER_3, "value": (0, 45, 46)},
             "bg_color2": {"type": ParamType.NUMBER_3, "value": (74, 99, 99)},
             "bg_color3": {"type": ParamType.NUMBER_3, "value": (120, 160, 188)},
@@ -76,7 +79,12 @@ class Config:
                 file.write("\n")
                 continue
 
-            line = f"{param} = {str(data["value"])}"
+            if data["type"] == ParamType.STRING:
+                value = '"' + str(data["value"]) + '"'
+            else:
+                value = str(data["value"])
+
+            line = f"{param} = {value}"
 
             if "comment" in data:
                 line += f" // {data["comment"]}"
@@ -86,21 +94,34 @@ class Config:
         file.close()
         print(f"Generated default config file at {self.config_path}")
 
+    def print_parse_error(self, line: int, comment: str):
+        raise BaseException(f"Error parsing config at line {line}: {comment}")
+
     def load_param(self, line_idx: int, param: str, value):
         if param not in self.params:
-            raise BaseException(f"Error parsing config at line {line_idx}: '{param}' doesn't exist.")
+            self.print_parse_error(line_idx, f"\"{param}\" doesn\'t exist.")
 
         match self.params[param]["type"]:
             case ParamType.NUMBER:
                 self.params[param]["value"] = int(value)
             case ParamType.NUMBER_3:
+                if not (value.count("(") == 1 and value.count(")") == 1):
+                    self.print_parse_error(line_idx, "Syntax error.")
+
                 value = value.lstrip("(").rstrip(")")
                 numbers = [int(v) for v in value.split(",")]
 
                 if len(numbers) != 3:
-                    raise BaseException(f"Error parsing config at line {line_idx}: Wrong number of values.")
+                    self.print_parse_error(line_idx, "Wrong number of values.")
 
                 self.params[param]["value"] = tuple(numbers)
+            case ParamType.STRING:
+                if value.count('"') != 2:
+                    self.print_parse_error(line_idx, "Syntax error.")
+
+                value = value.strip('"')
+
+                self.params[param]["value"] = value
             case ParamType.FLOAT:
                 self.params[param]["value"] = float(value)
 

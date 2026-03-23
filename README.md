@@ -17,7 +17,7 @@ A simple and modern frontend for [cava](https://github.com/karlstav/cava)
 - Edit it and rerun the program
 - To reset the config file, just delete it and rerun the program
 - Set use_local_cover_palette to 1 in order to extract the cover image from your local music 
-files and use that to generate the color palette
+files and use that to generate the color palette (folder can be changed)
 
 # Images
 ![image](./preview_0.jpg)

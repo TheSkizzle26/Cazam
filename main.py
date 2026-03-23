@@ -19,6 +19,7 @@ class Main:
 
         self.config = Config()
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
+        self.config_music_file_path = self.config["music_file_path"]
 
         self.width, self.height = 1920, 1080
         self.width_ffi = pr.ffi.new("int *", self.width)
@@ -101,9 +102,14 @@ class Main:
             song_path = self.system.get_song_path()
 
             if not song_path:
-                # not provided by player
                 print("Player doesn't provide song path, let's search for it...")
-                song_path = self.find_song_path(platformdirs.user_music_dir(), song_name)
+
+                if self.config_music_file_path:
+                    path = self.config_music_file_path
+                else:
+                    path = platformdirs.user_music_dir()
+
+                song_path = self.find_song_path(path, song_name)
 
             if song_path:
                 print(f"Found song path. ({song_path})")
