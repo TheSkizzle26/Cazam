@@ -6,6 +6,7 @@ from defaults import *
 
 
 class ParamType(Enum):
+    EMPTY = auto()
     NUMBER = auto()
     NUMBER_3 = auto()
     FLOAT = auto()
@@ -24,15 +25,26 @@ class Config:
         self.config_path = self.config_dir_path + "/" + "cazam.conf"
 
         self.params = {
+            "empty0": {"type": ParamType.EMPTY},
+
             "monitor": {"type": ParamType.NUMBER, "value": 0},
-            "vsync": {"type": ParamType.NUMBER, "value": 1}, # not actual vsync, but we don't need to tell 'em that :)
+            "vsync": {"type": ParamType.NUMBER, "value": 1}, # doesn't work, gotta fix
             "target_fps": {"type": ParamType.NUMBER, "value": 60, "comment": "ignored when vsync is used"},
+
+            "empty1": {"type": ParamType.EMPTY},
+
             "num_bars": {"type": ParamType.NUMBER, "value": 80},
             "bar_spacing": {"type": ParamType.FLOAT, "value": 2},
             "bar_height": {"type": ParamType.NUMBER, "value": 75, "comment": "in percent"},
             "bar_roundness": {"type": ParamType.NUMBER, "value": 80, "comment": "in percent"},
+
+            "empty2": {"type": ParamType.EMPTY},
+
             "bg_noise_amount": {"type": ParamType.FLOAT, "value": 0.05},
             "fg_noise_amount": {"type": ParamType.FLOAT, "value": 0.02},
+
+            "empty3": {"type": ParamType.EMPTY},
+
             "use_local_cover_palette": {"type": ParamType.NUMBER, "value": 0, "comment": "set to 1 to use local music files for palette"},
             "bg_color1": {"type": ParamType.NUMBER_3, "value": (0, 45, 46)},
             "bg_color2": {"type": ParamType.NUMBER_3, "value": (74, 99, 99)},
@@ -60,6 +72,10 @@ class Config:
         file.write("// auto generated config\n")
 
         for param, data in self.params.items():
+            if data["type"] == ParamType.EMPTY:
+                file.write("\n")
+                continue
+
             line = f"{param} = {str(data["value"])}"
 
             if "comment" in data:
