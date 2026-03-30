@@ -4,8 +4,9 @@ import pyray as pr
 import os
 import setproctitle
 
+from current_os import get_current_os, OSType
 from config import Config
-from system import SystemLinux
+from system import SystemLinux, System
 from core import Core
 import cover
 from palette import Palette
@@ -26,7 +27,13 @@ class Main:
         self.height_ffi = pr.ffi.new("int *", self.height)
         self.init_window()
 
-        self.system = SystemLinux()
+        match get_current_os():
+            case OSType.Linux:
+                print("Linux detected.")
+                self.system = SystemLinux()
+            case _:
+                print("Couldn't detect OS or OS not fully supported.\nSome features won't work.")
+                self.system = System()
         self.core = Core(self.config)
         self.palette = Palette(self.config)
         self.gradient = Gradient(self.config, self.palette)
