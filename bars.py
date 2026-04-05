@@ -5,6 +5,10 @@ from core import Core
 
 
 class Bars:
+    """
+    Renders all the bar values reported by the Core class.
+    """
+
     def __init__(self, config: Config, core: Core):
         self.config = config
         self.core = core
@@ -15,6 +19,11 @@ class Bars:
         self.config_bar_roundness = (self.config["bar_roundness"] / 100)
 
     def render(self, screen_size: tuple[int, int]):
+        """
+        Render the bar values reported by the Core class.
+        :param screen_size: The current screen's size
+        """
+
         width = screen_size[0] / self.config_num_bars
         max_height = (self.config_bar_height_percent / 100) * screen_size[1]
 

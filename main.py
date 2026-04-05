@@ -15,8 +15,12 @@ from bars import Bars
 
 
 class Main:
+    """
+    The main program.
+    """
+
     def __init__(self):
-        setproctitle.setproctitle("Cazam")
+        setproctitle.setproctitle("cazam")
 
         self.config = Config()
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
@@ -34,6 +38,7 @@ class Main:
             case _:
                 print("Couldn't detect OS or OS not fully supported.\nSome features won't work.")
                 self.system = System()
+
         self.core = Core(self.config)
         self.palette = Palette(self.config)
         self.gradient = Gradient(self.config, self.palette)
@@ -49,11 +54,19 @@ class Main:
         self.calculate_palette()
 
     def quit(self):
-        self.core.stop_thread()
+        """
+        Close all windows and processes.
+        """
+
+        self.core.stop()
         pr.close_window()
         sys.exit()
 
     def init_window(self):
+        """
+        Initialize the window.
+        """
+
         pr.set_config_flags(
             pr.ConfigFlags.FLAG_FULLSCREEN_MODE |
             pr.ConfigFlags.FLAG_WINDOW_RESIZABLE
@@ -69,6 +82,10 @@ class Main:
         pr.set_target_fps(target_fps)
 
     def regenerate_render_textures(self):
+        """
+        Unload previous and generate new render textures.
+        """
+
         pr.unload_render_texture(self.gradient_texture_bg)
         pr.unload_render_texture(self.gradient_texture_fg)
         pr.unload_render_texture(self.bars_texture)
@@ -78,6 +95,13 @@ class Main:
         self.bars_texture = pr.load_render_texture(self.width, self.height)
 
     def find_song_path(self, path: str, name: str):
+        """
+        Find a song's local file path based off its name.
+        :param path: path to start search from
+        :param name: the song's name
+        :return:
+        """
+
         for sub_dir in os.listdir(path):
             full_path = f"{path}/{sub_dir}"
 
@@ -91,6 +115,11 @@ class Main:
         return ""
 
     def calculate_palette(self, image_data=None):
+        """
+        Calculate palette based off raw image data if provided.
+        :param image_data: the image's raw data
+        """
+
         if image_data:
             self.palette.from_image_data(image_data)
 
@@ -103,6 +132,11 @@ class Main:
         pr.end_texture_mode()
 
     def sync(self):
+        """
+        Sync with system information.
+        Regenerates palette if necessary.
+        """
+
         if not self.config_use_local_files:
             return
 
@@ -132,6 +166,10 @@ class Main:
             self.calculate_palette(image_data)
 
     def adapt_window_size(self):
+        """
+        Change size of the internal render textures to the current window's size.
+        """
+
         pr.glfw_get_window_size(pr.get_window_handle(), self.width_ffi, self.height_ffi)
         window_size = (
             self.width_ffi[0],
@@ -146,6 +184,10 @@ class Main:
             self.calculate_palette()
 
     def update(self):
+        """
+        Update everything.
+        """
+
         now = pr.get_time()
 
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
@@ -158,6 +200,11 @@ class Main:
             self.sync()
 
     def draw_render_texture(self, render_texture: pr.RenderTexture):
+        """
+        Draw a render texture at 0, 0.
+        :param render_texture: the render texture to be drawn
+        """
+
         pr.draw_texture_rec(
             render_texture.texture,
             (0, 0, self.width, -self.height),
@@ -166,6 +213,10 @@ class Main:
         )
 
     def render_bars(self):
+        """
+        Render all the bars in a fancy way.
+        """
+
         pr.begin_texture_mode(self.bars_texture)
         pr.clear_background(pr.BLANK)
         self.bars.render((self.width, self.height))
@@ -185,6 +236,10 @@ class Main:
         self.draw_render_texture(self.bars_texture)
 
     def render(self):
+        """
+        Render everything.
+        """
+
         pr.begin_drawing()
 
         self.draw_render_texture(self.gradient_texture_bg)
@@ -193,6 +248,10 @@ class Main:
         pr.end_drawing()
 
     def run(self):
+        """
+        Run the main program and continuously call update and render functions.
+        """
+
         while not pr.window_should_close():
             self.update()
             self.render()
