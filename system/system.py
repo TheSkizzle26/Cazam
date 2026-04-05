@@ -1,4 +1,8 @@
 class System:
+    """
+    Handles fetching of all system-specific information.
+    """
+
     def fetch(self):
         """
         Fetches all the system information.
