@@ -119,7 +119,7 @@ class Config:
         """
 
         if param not in self.params:
-            self.print_parse_error(line_idx, f"\"{param}\" doesn\'t exist.")
+            self.print_parse_error(line_idx, f"\"{param}\" doesn't exist.")
 
         match self.params[param]["type"]:
             case ParamType.NUMBER:
