@@ -48,6 +48,11 @@ class Main:
 
         self.calculate_palette()
 
+    def quit(self):
+        self.core.stop()
+        pr.close_window()
+        sys.exit()
+
     def init_window(self):
         pr.set_config_flags(
             pr.ConfigFlags.FLAG_FULLSCREEN_MODE |
@@ -64,9 +69,9 @@ class Main:
         pr.set_target_fps(target_fps)
 
     def regenerate_render_textures(self):
-        if self.gradient_texture_bg: pr.unload_render_texture(self.gradient_texture_bg)
-        if self.gradient_texture_fg: pr.unload_render_texture(self.gradient_texture_fg)
-        if self.bars_texture: pr.unload_render_texture(self.bars_texture)
+        pr.unload_render_texture(self.gradient_texture_bg)
+        pr.unload_render_texture(self.gradient_texture_fg)
+        pr.unload_render_texture(self.bars_texture)
 
         self.gradient_texture_bg = pr.load_render_texture(self.width, self.height)
         self.gradient_texture_fg = pr.load_render_texture(self.width, self.height)
@@ -144,9 +149,7 @@ class Main:
         now = pr.get_time()
 
         if pr.is_key_pressed(pr.KeyboardKey.KEY_ESCAPE):
-            self.core.stop()
-            pr.close_window()
-            sys.exit()
+            self.quit()
 
         self.adapt_window_size()
 
@@ -190,11 +193,12 @@ class Main:
         pr.end_drawing()
 
     def run(self):
-        while True:
+        while not pr.window_should_close():
             self.update()
             self.render()
-
             pr.set_window_title(f"FPS: {pr.get_fps()}")
+
+        self.quit()
 
 
 if __name__ == '__main__':
