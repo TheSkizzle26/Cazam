@@ -12,9 +12,10 @@ class ParamType(Enum):
     STRING = auto()
     FLOAT = auto()
 
+
 class Config:
     """
-    Bit convoluted but who cares
+    Handles the config file located at ~/.config/Cazam/cazam.conf (Linux)
     """
 
     def __init__(self):
@@ -72,8 +73,11 @@ class Config:
         self.load()
 
     def gen_default_file(self):
-        file = open(self.config_path, "w")
+        """
+        Generate the default config file.
+        """
 
+        file = open(self.config_path, "w")
         file.write("// auto generated config\n")
 
         for param, data in self.params.items():
@@ -97,9 +101,23 @@ class Config:
         print(f"Generated default config file at {self.config_path}")
 
     def print_parse_error(self, line: int, comment: str):
+        """
+        Print an error that occurred during the parsing of the config file.
+        :param line:
+        :param comment:
+        :return:
+        """
+
         raise BaseException(f"Error parsing config at line {line}: {comment}")
 
     def load_param(self, line_idx: int, param: str, value):
+        """
+        Load a single parameter.
+        :param line_idx: the line's index
+        :param param: the parameter's name
+        :param value: the value as a raw string
+        """
+
         if param not in self.params:
             self.print_parse_error(line_idx, f"\"{param}\" doesn\'t exist.")
 
@@ -128,6 +146,10 @@ class Config:
                 self.params[param]["value"] = float(value)
 
     def load(self):
+        """
+        Load and parse the config file.
+        """
+
         if not os.path.exists(self.config_path):
             raise BaseException("Couldn't load config.")
 
@@ -154,7 +176,13 @@ class Config:
 
         file.close()
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str):
+        """
+        Get the value of a stored parameter.
+        :param item: the parameter's name
+        :return: the parameter's value, unknown type
+        """
+
         if item in self.params:
             return self.params[item]["value"]
 
