@@ -1,5 +1,5 @@
 """
-Simple wrapper around cava
+Simple wrapper around cava, also handles smoothing between frames.
 """
 
 

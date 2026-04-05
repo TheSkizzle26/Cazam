@@ -5,6 +5,10 @@ from palette import Palette
 
 
 class Gradient:
+    """
+    Renders a gradient with noise.
+    """
+
     def __init__(self, config: Config, palette: Palette):
         self.config = config
         self.palette = palette
@@ -26,6 +30,14 @@ class Gradient:
         )
 
     def set_uniform(self, name: str, value, cdecl: str, uniform_type: int):
+        """
+        Set the value of a shader uniform.
+        :param name: the uniform's name
+        :param value: the new value
+        :param cdecl: the c declaration of the type
+        :param uniform_type: the uniform's raylib type
+        """
+
         value = pr.ffi.new(cdecl, value)
         pr.set_shader_value(
             self.shader,
@@ -35,6 +47,11 @@ class Gradient:
         )
 
     def upload_colors(self, is_foreground=False):
+        """
+        Upload the palette's current colors to the shader.
+        :param is_foreground: are we rendering for the foreground?
+        """
+
         colors = []
         for i in range(self.num_colors):
             [colors.append(v) for v in self.palette.get_color_float(i + int(is_foreground*self.num_colors))]
@@ -49,6 +66,12 @@ class Gradient:
         )
 
     def render(self, screen_size: tuple[int, int], is_foreground=False):
+        """
+        Render the gradient.
+        :param screen_size: the current screen's size
+        :param is_foreground: are we rendering for the foreground?
+        """
+
         pr.begin_shader_mode(self.shader)
 
         self.upload_colors(is_foreground)
