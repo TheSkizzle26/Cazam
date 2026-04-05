@@ -1,6 +1,8 @@
 # Cazam
 A simple and modern frontend for [cava](https://github.com/karlstav/cava)
 
+Using local files for palette generation currently only works on linux, but it should be easy to add for other systems.
+
 ![image](./preview.jpg)
 
 # Requirements
