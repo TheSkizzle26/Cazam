@@ -49,7 +49,7 @@ class Main:
         self.calculate_palette()
 
     def quit(self):
-        self.core.stop()
+        self.core.stop_thread()
         pr.close_window()
         sys.exit()
 

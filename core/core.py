@@ -8,6 +8,10 @@ from config import Config
 
 
 class Core:
+    """
+    Handles cava subprocess and smoothing of values between frames.
+    """
+
     def __init__(self, config: Config):
         self.config_pattern = """
 [general]
@@ -48,6 +52,10 @@ bit_format = %s
         self.thread.start()
 
     def fetch_thread(self):
+        """
+        Continuously fetches cava's data in the background.
+        """
+
         while not self.stop_thread:
             data = self.source.read(self.chunk_size)
             if len(data) < self.chunk_size:
@@ -58,12 +66,27 @@ bit_format = %s
             self.last_fetch_time = pr.get_time()
 
     def stop(self):
+        """
+        Stop the thread responsible for fetching cava's data.
+        """
+
         self.stop_thread = True
 
-    def get_num_bars(self):
+    def get_num_bars(self) -> int:
+        """
+        Get number of bars being displayed.
+        :return: number of bars, including both channels
+        """
+
         return self.num_bars
 
     def get_bar_value(self, idx: int) -> float:
+        """
+        Get a bar's current value.
+        :param idx: bar's index (0=left, n=right)
+        :return: current value between 0 and 1
+        """
+
         if idx >= self.num_bars:
             return 0
 
