@@ -28,7 +28,12 @@ bit_format = %s
         self.out_bit_format = "16bit"
         self.raw_target = "/dev/stdout"
 
-        self.config = self.config_pattern % (self.num_bars, self.target_fps, self.raw_target, self.out_bit_format)
+        self.config = self.config_pattern % (
+            self.num_bars,
+            self.target_fps,
+            self.raw_target,
+            self.out_bit_format
+        )
         self.byte_type, self.byte_size, self.byte_norm = ("H", 2, 65535) if self.out_bit_format == "16bit" else ("B", 1, 255)
 
         self.config_file = tempfile.NamedTemporaryFile("w")
