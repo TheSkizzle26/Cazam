@@ -2,7 +2,6 @@ import sys
 import platformdirs
 import pyray as pr
 import os
-import setproctitle
 
 from current_os import get_current_os, OSType
 from config import Config
@@ -20,8 +19,6 @@ class Main:
     """
 
     def __init__(self):
-        setproctitle.setproctitle("cazam")
-
         self.config = Config()
         self.config_use_local_files = bool(self.config["use_local_cover_palette"])
         self.config_music_file_path = self.config["music_file_path"].removesuffix("/").removesuffix("\\")
