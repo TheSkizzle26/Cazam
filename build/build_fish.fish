@@ -1,4 +1,4 @@
-source ../.venv/bin/activate
+source ../.venv/bin/activate.fish
 
 # generate executable
 python -m PyInstaller --paths=../src --onefile --windowed --name cazam ../src/main.py
