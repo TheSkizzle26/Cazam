@@ -4,7 +4,7 @@ import tempfile
 import threading
 import pyray as pr
 
-from src.config import Config
+from config import Config
 
 
 class Core:
