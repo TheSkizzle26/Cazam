@@ -1,5 +1,5 @@
 # Cazam
-A simple and modern frontend for [cava](https://github.com/karlstav/cava)
+A simple and modern frontend for [cava](https://github.com/karlstav/cava).
 
 Currently only works on Linux, as it has to communicate with your media player.
 
@@ -7,12 +7,11 @@ Currently only works on Linux, as it has to communicate with your media player.
 
 # Requirements
 - cava installed on your system
-- uv installed on your system
 
 # How to run
-1. Clone the repository
-2. Open a terminal inside the folder you downloaded
-3. run **uv run main.py**
+1. Download the [latest release](https://github.com/TheSkizzle26/Cazam/releases)
+2. Unzip the file
+3. Run the executable
 
 # How to configure
 - Take a look at the cazam.conf file in the config folder (~/.config/Cazam on Linux)
